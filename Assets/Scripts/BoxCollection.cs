@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BoxCollection : MonoBehaviour
 {
     [SerializeField] Transform stack;
+
     float stackHeight = 0;
     float stackBottomPositionY;
 
@@ -16,6 +15,10 @@ public class BoxCollection : MonoBehaviour
 
     void Update()
     {
+        // scale up the stack in Y direction, depending the on Y size of collected box.
+        // collecting bigger boxes scales up stack quickly and vice versa.
+        // Adjust the position of the stack so its bottom is always just above player's head.
+
         stack.position = new Vector3(stack.position.x, transform.position.y + stackBottomPositionY + stackHeight/2, stack.position.z);
         stack.localScale = new Vector3(stack.localScale.x, stackHeight, stack.localScale.z);
 

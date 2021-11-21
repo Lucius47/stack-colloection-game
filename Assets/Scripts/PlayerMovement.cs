@@ -1,16 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody))]
 
 public class PlayerMovement : MonoBehaviour
 {
+
     Animator animator;
     Rigidbody rb;
+    [Header("Components")]
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundLayerMask;
 
-    float runSpeed = 10;
-    float jumpHeight = 400;
+    [Header("Movement")]
+    [SerializeField] float runSpeed = 100;
+    [SerializeField] float jumpHeight = 400;
+    [Range(0.2f, 1)]
+    [SerializeField] float turnRate;
 
     bool isMoving = false;
     
@@ -19,10 +24,9 @@ public class PlayerMovement : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         float turnAmount = Input.GetAxis("Horizontal");
@@ -34,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
         Turn(turnAmount);
         if(isMoving)
         {
-            rb.AddForce(transform.forward * runSpeed);
+            rb.AddForce(transform.forward * runSpeed * Time.deltaTime);
             animator.SetBool("isIdle", false);
             animator.SetBool("isRunning", true);
         }
@@ -46,40 +50,39 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rb.AddForce(transform.up *  jumpHeight);
+            rb.AddForce(transform.up *  jumpHeight * Time.deltaTime);
         }
         if (!IsGrounded())
         {
-            animator.SetBool("isJumping", true);
+            animator.SetBool("isJumping", true); // Jumping animation is not added yet.
         }
         else
         {
             animator.SetBool("isJumping", false);
         }
-
-
-
     }
+
+
     void Turn(float turnAmount)
     {
-        transform.Rotate(transform.up, turnAmount);
+        transform.Rotate(transform.up, turnAmount * turnRate);
         
-        //print(Vector3.Angle(transform.forward, dirToFace));
-        //while (Vector3.Angle(transform.forward, dirToFace) > 0)
+        /*print(Vector3.Angle(transform.forward, dirToFace));
+        while (Vector3.Angle(transform.forward, dirToFace) > 0)
         {
-            //animator.SetBool("isTurning", true);
-            //transform.Rotate(new Vector3(0, 1, 0));
+            animator.SetBool("isTurning", true);
+            transform.Rotate(new Vector3(0, 1, 0));
         }
-        //else
+        else
         {
-            //animator.SetBool("isTurning", false);
-        }
+            animator.SetBool("isTurning", false);
+        }*/
     }
 
     bool IsGrounded()
     {
         
-        if(Physics.CheckSphere(groundCheck.position, 0.05f, groundLayerMask))
+        if(Physics.CheckSphere(groundCheck.position, 0.05f, groundLayerMask)) //0.05 is radius of ground check sphere.
         {
             return true;
         }
