@@ -4,22 +4,25 @@
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region Fields
 
     Animator animator;
     Rigidbody rb;
+
     [Header("Components")]
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundLayerMask;
 
-    [Header("Movement")]
-    [SerializeField] float runSpeed = 100;
-    [SerializeField] float jumpHeight = 400;
-    [Range(0.2f, 1)]
-    [SerializeField] float turnRate;
+
+    float runSpeed = 1000; // Default values, set by UI
+    float jumpHeight = 40000;
+    float turnRate = 0.5f;
 
     bool isMoving = false;
-    
 
+    #endregion
+
+    #region Methods
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -88,5 +91,38 @@ public class PlayerMovement : MonoBehaviour
         }
         return false;
     }
-    
+    #endregion
+
+
+    #region Properties
+
+    public float RunSpeed
+    {
+        get { return runSpeed; }
+        set
+        {
+            if(value >= 0)
+                runSpeed = value;
+        }
+    }
+    public float JumpHeight
+    {
+        get { return jumpHeight; }
+        set
+        {
+            if (value >= 0)
+                jumpHeight = value;
+        }
+    }
+    public float TurnRate
+    {
+        get { return turnRate; }
+        set
+        {
+            if (value >= 0)
+                turnRate = value;
+        }
+    }
+
+    #endregion
 }
